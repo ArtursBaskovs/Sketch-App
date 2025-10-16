@@ -1,0 +1,70 @@
+.menu-btn {
+    
+    background-color: rgba(255, 255, 237, 0);
+    border-radius: 5px;
+    font-size: 1.6rem;
+    
+    padding: 3.2rem 1.2rem 2rem 1.2rem;
+    width: 24rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    //color: rgb(0, 0, 0);
+    background-image: url("../../images/ui_elements/buttonBG.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: auto;
+
+    transition: all 0.1s ease-in-out;
+    &:hover {
+        transform: scale(1.07);
+    }
+    &:hover p {
+        -webkit-mask-image: url("../../images/ui_elements/text_texture.webp");
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: cover;
+        -webkit-mask-position: center;
+        mask-image: url("../../images/ui_elements/text_texture.webp");
+        
+    }
+    /*
+    -webkit-mask-image: url("../../images/ui_elements/buttonBG.webp");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: cover;
+    -webkit-mask-position: center;
+    mask-image: url("../../images/ui_elements/buttonBG.webp");
+    mask-repeat: no-repeat;
+    mask-size: cover;
+    mask-position: center;
+    */
+}
+.btn-oneLine {
+    background-image: url("../../images/ui_elements/buttonBG_OneLine.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.btn-speedSketch {
+    background-image: url("../../images/ui_elements/buttonBG_SpeedSketch.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.btn-memoryReference {
+    background-image: url("../../images/ui_elements/buttonBG_MemoryRef.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.btn-randomPrompt {
+    background-image: url("../../images/ui_elements/buttonBG_RandomPrompt.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.btn-limitedStrokes {
+    background-image: url("../../images/ui_elements/buttonBG_LimitedStrokes.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}

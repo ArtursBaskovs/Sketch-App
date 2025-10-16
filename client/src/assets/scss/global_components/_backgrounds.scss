@@ -1,0 +1,39 @@
+.bg-BG {
+    background: url('../../images/ui_elements/BG.webp') center top no-repeat;
+    background-size: 2560px 1440px; /* фиксированный размер */
+}
+.bg-brushStroke {
+    position: relative;
+    overflow: visible;
+    &::before {
+        content: "";
+        position: absolute;
+
+        width: 100%;
+        height: 120%;
+        background-image: url("../../images/ui_elements/brushStroke.webp");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        overflow: auto;
+    }
+    > * { //text
+        position: relative;
+        z-index: 1;
+    }
+    @media (max-width: 1024px) {
+        &::before {
+            width: 118%;
+            height: 120%;
+        }
+        //padding: 0.5rem 1rem; 
+  }
+
+}
+
+.bg-blurAround {
+    //border: 8px solid; // Толщина рамки
+    //border-radius: 1rem; // Скругление
+    //border-image: linear-gradient(1deg, hsl(15, 6%, 15%), hsl(0, 5%, 7%)) 1; 
+    box-shadow: 0 0 45px hsl(15, 6%, 15%), 0 0 40px hsl(0, 6%, 19%);
+}

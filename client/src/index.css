@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+    --color-darkBGColor: hsl(15, 6%, 15%);
+    --color-darkerBGColor: hsl(0, 6%, 10%);
+    --color-highlightColor: hsl(43, 85%, 95%);
+}
+:root {
+    font-family: "Ubuntu", sans-serif;
+    background-color: hsl(0, 6%, 10%);
+}
