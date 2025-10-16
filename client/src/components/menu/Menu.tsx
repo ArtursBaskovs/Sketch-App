@@ -41,9 +41,11 @@ export const Menu: React.FC = () => {
                     </button>
                 </Link>
 
-                <button className="menu-btn btn-oneLine">
-                    <p>One Line</p>
-                </button>
+                <Link to='/draw/one-line'>
+                  <button className="menu-btn btn-oneLine">
+                      <p>One Line</p>
+                  </button>
+                </Link>
                 <button className="menu-btn btn-memoryReference">
                     <p>Memory Reference</p>
                 </button>
