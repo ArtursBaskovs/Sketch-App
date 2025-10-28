@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 export const Menu: React.FC = () => {
     return (
         <>
-        <div className="MENU_CONTAINER z-1
+        <div className="MENU_CONTAINER 
           lg:pt-20 
           container md:max-w-170 lg:max-w-200 xl:max-w-280 2xl:max-w-350  
           flex items-center 
@@ -35,7 +35,7 @@ export const Menu: React.FC = () => {
               font-['Chewy'] tracking-widest sm:[letter-spacing:0.2rem] text-amber-950  
               drop-shadow-xl drop-shadow-black
             ">
-                <Link to='/draw'>
+                <Link to='/draw/speed-sketch'>
                     <button className="menu-btn btn-speedSketch">
                         <p> Speed Sketch</p>
                     </button>

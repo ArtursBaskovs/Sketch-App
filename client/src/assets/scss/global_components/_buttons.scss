@@ -68,3 +68,24 @@
     background-position: center;
     background-size: cover;
 }
+
+
+$buttonSize: 1rem;
+.button-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $buttonSize;
+  height: $buttonSize;
+  border-radius: 50%;
+  border: 2px solid; 
+  background-color: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+
+  &:hover {
+    border-color: #ffffff;
+    color: #ffffff;           
+  }
+}
+
