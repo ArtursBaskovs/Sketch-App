@@ -26,7 +26,10 @@ function Layout() {
           <span className="hidden 2xl:block">2xl — desktop ≥27"</span>
         </div>
 
+        
         <Outlet />
+        
+        
 
 
     </div>

@@ -5,9 +5,12 @@ import './assets/scss/_styles.scss'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.tsx'
-import { Menu } from './components/menu/Menu.tsx'
-import { DrawCanva } from './components/drawing_components/DrawCanva.tsx'
+import { Menu } from './pages/menu_page/Menu.tsx'
+import { DrawCanva } from './components/ui/Drawing/DrawCanva.tsx'
 import { NotFound404 } from './components/NotFound404.tsx'
+import { SpeedSketch } from './pages/drawing_pages/SpeedSketch.tsx'
+import { store } from './store/store.ts'
+import { Provider } from 'react-redux'
 
 const router = createBrowserRouter([
   {  
@@ -23,8 +26,8 @@ const router = createBrowserRouter([
         element: <Menu />, 
       },
       { 
-        path: '/draw/', 
-        element: <DrawCanva /> 
+        path: '/draw/speed-sketch', 
+        element: <SpeedSketch /> 
       }
     ]
   }
@@ -32,6 +35,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )
