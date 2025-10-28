@@ -5,7 +5,10 @@ There will be different mode user will be able to choose from. For example "Fast
 
 <img width="1443" height="925" alt="image" src="https://github.com/user-attachments/assets/40eb8fee-d49e-43cc-bb31-7ada4d581117" />
 
-
 # Planned stack
 
 React, TypeScript, SCSS/TailwindCSS, Vite, Node.js, Framer Motion
+
+# Current progress
+
+Working menu page and drawing components. User can open drawing page and draw on canva, change colors, change brush size and form, erase, draw with drawing tablet (brush size dependant in pen pressure)
