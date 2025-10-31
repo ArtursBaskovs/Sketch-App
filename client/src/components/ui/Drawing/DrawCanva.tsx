@@ -37,34 +37,18 @@ export const DrawCanva: React.FC = () => {
         canvas.style.height = `${height}px`;
         context.scale(scale, scale);
         
-        
-        //brush static config on first render
-        context.lineCap = brushForm;
-        context.strokeStyle = brushColor;
-        context.globalCompositeOperation = brushMode;
-
-        //save brush setting in ref
         contextRef.current = context;
 
         brushModeHandler();
     }, [])
 
-    useEffect(() => {
+    const updateBrushSettings = () => {
         if(contextRef.current == null) return;
-        //brush static config on settings change
-        //console.log("triggered: brush static config on settings change");
         contextRef.current.lineCap = brushForm;
-        
         contextRef.current.strokeStyle = brushColor;
-
-    }, [brushForm, brushColor, brushMode]);
-
-    useEffect(() => {
-        if(contextRef.current == null) return;
         contextRef.current.globalCompositeOperation = brushMode;
         brushModeHandler();
-    }, [brushMode, brushSize, eraserBrushSize])
-
+    }
     //switches brush size depending on if it is eraser or just a brush
     const brushModeHandler = () => {
         if(brushMode == "source-over") {
@@ -80,7 +64,7 @@ export const DrawCanva: React.FC = () => {
     const startDrawing = (e: React.PointerEvent<HTMLCanvasElement>) => {
         console.log('start');
         if(contextRef.current == null) return;
-
+        updateBrushSettings();
         const {offsetX, offsetY} = e.nativeEvent; //coordinates where user started to draw
         lastPoint.current = { x: offsetX, y: offsetY }; //set that position
         
