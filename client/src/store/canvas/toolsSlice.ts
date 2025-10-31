@@ -12,7 +12,7 @@ const initialState: ToolsState = {
     brushSize: 0.1,
     brushPressureMultiplier: 4,
     brushForm: "round",
-    brushColor: "black",
+    brushColor: "#000000",
     brushMode: "source-over",
     eraserBrushSize: 40,
 }

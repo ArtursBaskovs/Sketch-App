@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../store/store";
 import { setBrushSize, setEraserBrushSize } from "../../../../store/canvas/toolsSlice";
+import { useEffect, useState } from "react";
 
 
 interface ToolHandlers {
@@ -13,32 +14,56 @@ interface ToolHandlers {
 
 export const BrushResizeTool: React.FC = () => {
     const dispatch = useDispatch();
-    const brushSize = useSelector((state: RootState) => state.tools.brushSize);
 
+    const brushSize = useSelector((state: RootState) => state.tools.brushSize);
     const brushMode = useSelector((state: RootState) => state.tools.brushMode);
     const eraserBrushSize = useSelector((state: RootState) => state.tools.eraserBrushSize);
 
-
+    const [localBrushSizeState, setLocalBrushSizeState] = useState(brushSize);
+    const [localEraserSizeState, setLocalEraserSizeState] = useState(eraserBrushSize);
     
     const brushHandlers: ToolHandlers = {
         handlerName: "brush",
-        sizeValue: brushSize,
-        decrement: () => dispatch(setBrushSize(brushSize - 0.5)),
-        increment: () => dispatch(setBrushSize(brushSize + 0.5)),
+        sizeValue: localBrushSizeState,
+        decrement: () => setLocalBrushSizeState(prev => {
+            if(prev <= 0) return prev;
+            return prev - 0.5;
+        }),
+        increment: () => setLocalBrushSizeState(prev => {
+            if(prev >= 100) return prev;
+            return prev + 0.5;
+        }),
         input: (e: React.ChangeEvent<HTMLInputElement>) =>
-            dispatch(setBrushSize(Number(e.target.value))),
+            setLocalBrushSizeState(Number(e.target.value)),
     };
 
     const eraserHandlers: ToolHandlers = {
         handlerName: "eraser",
-        sizeValue: eraserBrushSize,
-        decrement: () => dispatch(setEraserBrushSize(eraserBrushSize - 1)),
-        increment: () => dispatch(setEraserBrushSize(eraserBrushSize + 1)),
+        sizeValue: localEraserSizeState,
+        decrement: () => setLocalEraserSizeState(prev => {
+            if(prev < 0) return prev;
+            return prev - 0.5;
+        }),
+        increment: () => setLocalEraserSizeState(prev => {
+            if(prev > 100) return prev;
+            return prev + 0.5;
+        }),
         input: (e: React.ChangeEvent<HTMLInputElement>) =>
-            dispatch(setEraserBrushSize(Number(e.target.value))),
+            setLocalEraserSizeState(Number(e.target.value)),
     };
 
     const currentHandlerMode: ToolHandlers = brushMode === "destination-out" ? eraserHandlers : brushHandlers;
+
+
+    //to avoid extra canvas rerenders because of redux. so i use local state first then update global states
+    //important mostly for slider inputs, because they cause many renders
+    useEffect(() => { 
+        const reduxDispatchThrottleTime = setTimeout(() => {
+            dispatch(setBrushSize(localBrushSizeState));
+            dispatch(setEraserBrushSize(localEraserSizeState))
+        }, 300);
+        return () => clearTimeout(reduxDispatchThrottleTime);
+    }, [localBrushSizeState, localEraserSizeState])
 
 
     return (
