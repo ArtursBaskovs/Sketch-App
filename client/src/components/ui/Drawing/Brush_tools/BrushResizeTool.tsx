@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../store/store";
 import { setBrushSize, setEraserBrushSize } from "../../../../store/canvas/toolsSlice";
 import { useEffect, useState } from "react";
+import useKeyBinds from "../../../../hooks/useKeyBinds";
+import { keyBinds } from "../../../../config/keyBinds";
 
 
 interface ToolHandlers {
@@ -13,6 +15,7 @@ interface ToolHandlers {
 }
 
 export const BrushResizeTool: React.FC = () => {
+    
     const dispatch = useDispatch();
 
     const brushSize = useSelector((state: RootState) => state.tools.brushSize);
@@ -54,6 +57,13 @@ export const BrushResizeTool: React.FC = () => {
 
     const currentHandlerMode: ToolHandlers = brushMode === "destination-out" ? eraserHandlers : brushHandlers;
 
+    // set keybinds
+    const {
+        action
+    } = useKeyBinds();
+    action(keyBinds.brushActions.incrementBrushSize.key, () => brushHandlers.increment());
+    action(keyBinds.brushActions.decrementBrushSize.key, () => brushHandlers.decrement());
+    
 
     //to avoid extra canvas rerenders because of redux. so i use local state first then update global states
     //important mostly for slider inputs, because they cause many renders
