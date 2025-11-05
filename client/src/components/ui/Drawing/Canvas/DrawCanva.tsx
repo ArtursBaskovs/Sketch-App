@@ -2,20 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store/store";
 
-interface Point {
-    x: number;
-    y: number;
-    pressure: number;
-    color: string;
-    size: number;
-}
+
 export const DrawCanva: React.FC = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D>(null);
     const brushEraserSizeRef = useRef<number>(null);
-    const lastPressure = useRef<number>(1);
-
     const [isDrawing, setIsDrawing] = useState(false);
     const lastPoint = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
     //redux
@@ -26,14 +18,14 @@ export const DrawCanva: React.FC = () => {
     const brushMode = useSelector((state: RootState) => state.tools.brushMode);
     const eraserBrushSize = useSelector((state: RootState) => state.tools.eraserBrushSize);
 
-    const [points, setPoints] = useState<Point[]>([]);
+    
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if(!canvas) return;
+        if (!canvas) return;
 
         const context = canvas.getContext("2d");
-        if(!context) return;
+        if (!context) return;
 
         //canvas size and pixel ratio config
         const width = 1400;
@@ -53,7 +45,7 @@ export const DrawCanva: React.FC = () => {
     const updateBrushSettings = () => {
         if(contextRef.current == null) return;
         contextRef.current.lineCap = brushForm;
-        contextRef.current.strokeStyle = brushColor;
+        //contextRef.current.strokeStyle = brushColor;
         contextRef.current.globalCompositeOperation = brushMode;
         brushModeHandler();
     }
@@ -73,11 +65,9 @@ export const DrawCanva: React.FC = () => {
         console.log('start');
         if(contextRef.current == null) return;
         updateBrushSettings();
-        const {offsetX, offsetY, pressure} = e.nativeEvent; //coordinates where user started to draw
-
-        setPoints([{ x: offsetX, y: offsetY, pressure, color: brushColor, size: brushSize }]);
-
-        lastPoint.current = { x: offsetX, y: offsetY }; 
+        const {offsetX, offsetY} = e.nativeEvent; //coordinates where user started to draw
+        lastPoint.current = { x: offsetX, y: offsetY }; //set that position
+        
         draw(e);
         
         setIsDrawing(true);
@@ -85,7 +75,7 @@ export const DrawCanva: React.FC = () => {
 
     const stopDrawing = () => {
         if(contextRef.current == null) return;
-        console.log(points);
+
         contextRef.current.closePath();
         setIsDrawing(false);
     }
@@ -99,47 +89,24 @@ export const DrawCanva: React.FC = () => {
     const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
         if(contextRef.current == null) return;
         if(brushEraserSizeRef.current == null) return;
-        
-        const {offsetX, offsetY, pressure} = e.nativeEvent;
+        if(canvasRef.current == null) return
 
+        const {offsetX, offsetY, pressure} = e.nativeEvent;
         //pressure/size dynamic config
         //const lineSize = (pressure + brushSize ) * brushPressureMultiplier;
         const lineSize = (pressure + brushEraserSizeRef.current ) * (brushPressureMultiplier * 4);
 
-        setPoints(prev => [
-            ...prev,
-            { x: offsetX, y: offsetY, pressure, color: brushColor, size: lineSize },
-        ]);
+        contextRef.current.lineWidth = lineSize;
+        contextRef.current.strokeStyle = brushColor;
+        //draws a line to movement coordinates 
+        contextRef.current.beginPath(); 
+        //contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        contextRef.current.moveTo(lastPoint.current.x, lastPoint.current.y);
+        contextRef.current.lineTo(offsetX, offsetY); 
+        contextRef.current.stroke();
+
+        lastPoint.current = { x: offsetX, y: offsetY };
     }
-
-useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (points.length < 2) return;
-
-  for (let i = 1; i < points.length; i++) {
-    const p1 = points[i - 1];
-    const p2 = points[i];
-
-    const avgX = (p1.x + p2.x) / 2;
-    const avgY = (p1.y + p2.y) / 2;
-
-    const width = ((p1.pressure + p2.pressure) / 2) * p1.size;
-    ctx.lineWidth = width;
-    ctx.strokeStyle = p1.color;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.stroke();
-  }
-}, [points]);
 
     
     return (
@@ -154,7 +121,7 @@ useEffect(() => {
                 onPointerDown={startDrawing}
                 onPointerUp={stopDrawing}
                 onPointerMove={drawInProcess}
-                
+                onPointerLeave={stopDrawing}
                 
                 ref={canvasRef}
                 style={{
@@ -164,6 +131,7 @@ useEffect(() => {
                     touchAction: "none"
                 }}
             />
+            
         </div>
 
         </>
