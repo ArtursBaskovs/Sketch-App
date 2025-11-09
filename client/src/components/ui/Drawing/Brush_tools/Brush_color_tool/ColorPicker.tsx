@@ -7,6 +7,7 @@ import { colord } from "colord";
 import useDebounceOnFunction from "../../../../../hooks/useDebounce";
 import { ColorPalette } from "./ColorPalette";
 
+
 interface HSLA {
   h: number;
   s: number;
@@ -71,6 +72,7 @@ export const ColorPicker: React.FC = () => {
         dispatch(setBrushColor(color));
         hexToHSLA(color);
     }, [dispatch, hexToHSLA]);
+
 
 
     return (
