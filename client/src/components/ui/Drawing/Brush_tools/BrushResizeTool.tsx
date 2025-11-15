@@ -30,11 +30,11 @@ export const BrushResizeTool: React.FC = () => {
         sizeValue: localBrushSizeState,
         decrement: () => setLocalBrushSizeState(prev => {
             if(prev <= 0) return prev;
-            return prev - 0.5;
+            return prev - 1;
         }),
         increment: () => setLocalBrushSizeState(prev => {
-            if(prev >= 100) return prev;
-            return prev + 0.5;
+            if(prev >= 350) return prev;
+            return prev + 1;
         }),
         input: (e: React.ChangeEvent<HTMLInputElement>) =>
             setLocalBrushSizeState(Number(e.target.value)),
@@ -48,7 +48,7 @@ export const BrushResizeTool: React.FC = () => {
             return prev - 0.5;
         }),
         increment: () => setLocalEraserSizeState(prev => {
-            if(prev > 100) return prev;
+            if(prev > 350) return prev;
             return prev + 0.5;
         }),
         input: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -61,8 +61,8 @@ export const BrushResizeTool: React.FC = () => {
     const {
         action
     } = useKeyBinds();
-    action(keyBinds.brushActions.incrementBrushSize.key, () => brushHandlers.increment());
-    action(keyBinds.brushActions.decrementBrushSize.key, () => brushHandlers.decrement());
+    action(keyBinds.brushActions.incrementBrushSize.key, keyBinds.brushActions.incrementBrushSize.modifier, () => brushHandlers.increment());
+    action(keyBinds.brushActions.decrementBrushSize.key, keyBinds.brushActions.decrementBrushSize.modifier, () => brushHandlers.decrement());
     
 
     //to avoid extra canvas rerenders because of redux. so i use local state first then update global states
@@ -111,7 +111,7 @@ export const BrushResizeTool: React.FC = () => {
             <div className="flex flex-col justify-center items-center gap-1">
                 <input 
                     type="range" 
-                    min="0" max="100" 
+                    min="0" max="350" 
                     value={currentHandlerMode.sizeValue}
                     onChange={currentHandlerMode.input}
                     className="w-74 h-4 bg-neutral-900 rounded-lg appearance-none 

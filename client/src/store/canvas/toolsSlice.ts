@@ -12,12 +12,12 @@ export interface ToolsState {
     brushShadowEnabled: boolean,
 }
 const initialState: ToolsState = {
-    brushSize: 4,
+    brushSize: 6,
     brushPressureMultiplier: 4,
     brushForm: "round",
     brushColor: "#000000",
     brushMode: "source-over",
-    eraserBrushSize: 10,
+    eraserBrushSize: 6,
     brushShadowSize: 5,
     brushShadowEnabled: false,
 }
@@ -27,7 +27,6 @@ export const toolsSlice = createSlice({
     initialState,
     reducers: {
         setBrushSize: (state, action: PayloadAction<number>) => {
-            if(action.payload > 100 || action.payload < 0) return;
             state.brushSize = action.payload;
         },
         setBrushPressureMultiplier: (state, action: PayloadAction<number>) => {

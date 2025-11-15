@@ -14,7 +14,7 @@ interface HSLA {
   l: number;
   a: number;
 }
-
+//meybe I will refactor this color picker later to be reusable for different components not only brush settings
 export const ColorPicker: React.FC = () => {
     const dispatch = useDispatch();
     const brushColor = useSelector((state: RootState) => state.tools.brushColor);

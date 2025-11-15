@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 
 const useKeyBinds = () => {
 
-    const handleKeyListener = (key: string, action: () => void) => {
+    const handleKeyListener = (key: string, modKey: string, keyboardAction: () => void) => {
         useEffect(() => {
             const handleKeyDown = (e: KeyboardEvent) => {
-                if (e.key === key) {
-                    action();
+
+                if(modKey != '' && !e.getModifierState(modKey)) {
+                    return; //if action was called with passed not empty combo key, but it was not pressed
+                }
+                if(e.key === key) {
+                    keyboardAction();
                 }
             };
 
@@ -15,12 +19,12 @@ const useKeyBinds = () => {
         }, [key, action]); 
     };
 
-    const action = (key: string, action: () => void) => {
-        handleKeyListener(key, action);
+    const action = (key: string, modKey: string, action: () => void) => {
+        handleKeyListener(key, modKey, action);
     }
 
     return { 
-        action
+        action,
     };
 }
 

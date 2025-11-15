@@ -36,8 +36,8 @@ export const BrushesTool: React.FC = () => {
     const {
         action
     } = useKeyBinds();
-    action(keyBinds.brushActions.switchToBrush.key, () => dispatch(setBrushModeDraw()));
-    action(keyBinds.brushActions.switchToEraser.key, () => dispatch(setBrushModeErase()));
+    action(keyBinds.brushActions.switchToBrush.key, keyBinds.brushActions.switchToBrush.modifier, () => dispatch(setBrushModeDraw()));
+    action(keyBinds.brushActions.switchToEraser.key, keyBinds.brushActions.switchToEraser.modifier, () => dispatch(setBrushModeErase()));
 
     return (
         <>

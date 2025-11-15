@@ -10,6 +10,7 @@ interface Props {
 export const RoundShape_Brush: React.FC<Props> = ({ line, i }) => (
     <Line
         key={i}
+        listening={false} 
         points={line.points}
         stroke={line.color}
         strokeWidth={

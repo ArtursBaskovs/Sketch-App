@@ -11,4 +11,4 @@ React, TypeScript, SCSS/TailwindCSS, Vite, Node.js, Framer Motion
 
 # Current progress
 
-Working menu page and drawing components. User can open drawing page and draw on canva, change colors, change brush size and form, erase, draw with drawing tablet (brush size dependant in pen pressure)
+I have menu, drawing canvas with necessery drawing tools. Started with REST API for reference image requests

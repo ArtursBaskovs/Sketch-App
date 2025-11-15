@@ -25,6 +25,7 @@ export const DynamicLineShape_Brush: React.FC<Props> = ({ line, i }) => {
     return (
       <Line
         key={i}
+        listening={false}  
         closed={true}
         points={mergedPoints}
         stroke={line.color}

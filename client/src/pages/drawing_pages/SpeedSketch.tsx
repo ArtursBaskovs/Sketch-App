@@ -8,7 +8,7 @@ export const SpeedSketch: React.FC = () => {
     return (
         <>
         <h1>Speed Sketch</h1>
-        <div className="flex flex-row z-1 justify-evenly w-full">
+        <div className="flex flex-row z-1 justify-evenly w-full mt-10">
             <DrawingToolsPanel />
             <DrawingKonva />
 

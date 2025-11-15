@@ -1,5 +1,5 @@
-import { useRef, useState, type JSX } from 'react';
-import { Stage, Layer} from 'react-konva';
+import { useEffect, useRef, useState, type JSX } from 'react';
+import { Stage, Layer, Rect, Line} from 'react-konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store/store";
@@ -8,6 +8,10 @@ import type { BrushType } from '../../../../types/brushTypes';
 import { RoundShape_Brush } from './Konva_Brush_Shapes/RoundShape_Brush';
 import { SquareShape_Brush } from './Konva_Brush_Shapes/SquareShape_Brush';
 import { DynamicLineShape_Brush } from './Konva_Brush_Shapes/DynamicLineShape_Brush';
+import  getCursorSvg  from "../../../../assets/cursor"
+import Konva from 'konva';
+import useKeyBinds from '../../../../hooks/useKeyBinds';
+import { keyBinds } from '../../../../config/keyBinds';
 
 export const DrawingKonva: React.FC = () => {
     //redux
@@ -21,8 +25,20 @@ export const DrawingKonva: React.FC = () => {
     const brushShadowSize = useSelector((state: RootState) => state.tools.brushShadowSize);
     //
     const [lines, setLines] = useState<Lines[]>([]);
+    const [undoedLines, setUndoedLines] = useState<Lines[]>([]);
     const isDrawing = useRef(false);
     const lastPressureRef = useRef<number>(1);
+    const canvaContainerRef = useRef<HTMLDivElement>(null);
+    const [stageSize, setStageSize] = useState<DOMRect>();
+
+    // set keybinds
+    const {
+        action
+    } = useKeyBinds();
+    action(keyBinds.canvas.undo.key, keyBinds.canvas.undo.modifier, () => undo());
+    action(keyBinds.canvas.redo.key, keyBinds.canvas.redo.modifier, () => redo());
+    //action(keyBinds, () => brushHandlers.increment());
+   
 
     const addNewLine  = (e: KonvaEventObject<PointerEvent>) => {
         const stage = e.target.getStage();
@@ -42,15 +58,16 @@ export const DrawingKonva: React.FC = () => {
             points: [pos.x, pos.y, pos.x, pos.y],
             hasBrushShadow: hasBrushShadow,
             shadowSize: brushShadowSize
-        }]);
+        }])
     }
 
     const handleMouseDown = (e: KonvaEventObject<PointerEvent>) => {
         if (!isDrawing) return;
         isDrawing.current = true;
 
+        setUndoedLines([]);
         addNewLine(e);
-    };
+    }
     
     const handleMouseMove = (e:  KonvaEventObject<PointerEvent>) => {
         // no drawing - skipping
@@ -74,11 +91,24 @@ export const DrawingKonva: React.FC = () => {
         // replace last
         lines.splice(lines.length - 1, 1, lastLine);
         setLines(lines.concat());
-    }; 
+    }
 
     const handleMouseUp = () => {
         isDrawing.current = false;
-    };
+    }
+
+    const undo = () => {
+        const lastLine = lines.at(-1);
+        if (lastLine) setUndoedLines((prev) => [...prev, lastLine]);
+        setLines((prev) => prev.slice(0, -1));
+    }
+
+    const redo = () => {
+        const lastUndoedLine = undoedLines.at(-1);
+        if(!lastUndoedLine) return;
+        setLines((prev) => [...prev, lastUndoedLine]);
+        setUndoedLines((prev) => prev.slice(0, -1));
+    }
 
     //cnavas are too slow to create new path each time pressure is changed, 
     // it created overlaying points or gaps if I create new path after pressure change
@@ -102,21 +132,54 @@ export const DrawingKonva: React.FC = () => {
         if (currentBrush === "dynamic_line") return <DynamicLineShape_Brush line={line} i={i} />;
         return <p>Nothing to render</p>;
     };
+    
+    //change Stage size depending on its container size
+    const syncContainerKonvaSize = () => {
+        if(!canvaContainerRef) return;
+        setStageSize(canvaContainerRef.current?.getBoundingClientRect());
+    }
+    useEffect(() => {
+        syncContainerKonvaSize();
+    }, [canvaContainerRef.current])
 
+
+
+
+    const cursorSvg = getCursorSvg(brushSize);
+    const cursorUrl = `url('data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}')`;
     return (
         <>  
-        <div>
+        <div 
+            ref={canvaContainerRef} 
+            onPointerDown={syncContainerKonvaSize} 
+            className=' w-300'
+            style={{
+                cursor: `${cursorUrl} ${brushSize / 2} ${brushSize / 2}, auto`,
+            }}          
+        >
             <Stage
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={stageSize?.width} 
+                height={stageSize?.height}
                 onPointerDown={handleMouseDown}
                 onPointerMove={handleMouseMove}
                 onPointerUp={handleMouseUp}
+                onPointerLeave={handleMouseUp}
                 style={{
                     touchAction: "none"
                 }}
             >
                 <Layer>
+                    <Rect
+                        listening={false}  
+                        x={0}
+                        y={0}
+                        width={stageSize?.width}
+                        height={stageSize?.height}
+                        fill="#fff"
+                    />
+                </Layer>
+
+                <Layer >
                     {/* <Line> is one path that connects all points. 
                     For now per one OnPointerDown i create one Line 
                     */}
