@@ -11,7 +11,6 @@ export const DrawingToolsPanel: React.FC = () => {
         <>
         <div className="border-amber-400 bg-amber-50/10 flex flex-col gap-10 w-90 p-8">
             <BrushResizeTool />
-            {/*<BrushMultiplierTool />*/}
             <BrushColorTool />
             <BrushesTool />
         </div>
