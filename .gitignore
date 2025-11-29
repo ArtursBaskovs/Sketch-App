@@ -1,4 +1,4 @@
 node_modules/
 dist/
 *.psd
-serviceAccountKey.json
+server/src/db/serviceAccountKey.json
